@@ -1,0 +1,61 @@
+org: hirokibrainfiber
+app: slackbot-gpt-functions
+service: slackbot-gpt35-lamda
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.9
+  region: ap-northeast-1
+  iam:
+    role:
+      statements:
+        # Lazy Listers を利用するために必要
+        - Effect: Allow
+          Action:
+            - lambda:InvokeFunction
+            - lambda:InvokeAsync
+          Resource: "*"
+        # 他にも必要なものがあれば追記してください
+  environment:
+    SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
+    SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
+    OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+
+functions:
+  func:
+    handler: handler.handler
+    timeout: 60
+    events:
+      - httpApi:
+          path: /slack/events
+          method: post
+    package:
+      # Directories and files to include in the deployed package
+      patterns:
+        - ./**
+        - handler.py
+        - '!.git/**'
+        - '!.travis.yml'
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    slim: true
+    zip: true
+
+package:
+  # Directories and files to include in the deployed package
+  patterns:
+    - ./**
+    - handler.py
+    - '!.git/**'
+    - '!.travis.yml'
+  # Package each function as an individual artifact (default: false)
+  individually: true
+  # Automatically exclude NPM dev dependencies from the deployed package (default: true)
+  excludeDevDependencies: false

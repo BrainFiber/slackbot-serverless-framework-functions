@@ -1,0 +1,17 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+slack-bolt = "*"
+pydantic = "==1.10.9"
+langchain = "*"
+pytz = "*"
+matplotlib = "*"
+openai = "*"
+
+[dev-packages]
+
+[requires]
+python_version = "3.9"
