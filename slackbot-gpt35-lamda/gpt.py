@@ -9,9 +9,6 @@ from langchain.tools.python.tool import PythonREPLTool
 
 import os
 
-# Jokeクラスをインポートする
-from outputParser import Response
-
 # PROPMPTをインポートする
 from prompt import GPT35
 
