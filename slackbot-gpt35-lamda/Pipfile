@@ -10,6 +10,9 @@ langchain = "*"
 pytz = "*"
 matplotlib = "*"
 openai = "*"
+requests = "*"
+bs4 = "*"
+newsapi-python = "*"
 
 [dev-packages]
 

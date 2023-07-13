@@ -13,6 +13,7 @@ import os
 from prompt import GPT35
 
 from tools.graph import create_graph_creator
+from tools.newApi import create_news_search_creator
 
 
 def return_answer(text):
@@ -45,7 +46,8 @@ def gpt35(query, channel, ts,client, historyStr=""):
             description="Returning answers to questions"
             # coroutine= ... <- you can specify an async method if desired as well
         ),
-        create_graph_creator(client)
+        create_graph_creator(client),
+        create_news_search_creator(client)
     ]
 
     agent = initialize_agent(tools, llm, agent=AgentType.OPENAI_FUNCTIONS, verbose=True)

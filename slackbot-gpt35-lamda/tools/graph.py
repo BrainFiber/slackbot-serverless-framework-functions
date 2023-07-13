@@ -5,6 +5,7 @@ from langchain.agents.agent_toolkits import create_python_agent
 from langchain.agents import initialize_agent, Tool, AgentType
 from langchain.output_parsers import PydanticOutputParser
 from langchain import PromptTemplate
+import uuid
 
 
 import os
@@ -12,7 +13,7 @@ import os
 # PROPMPTをインポートする
 from prompt import GRAPH_CREATOR_CREATE_PYTHON_AGENT
 
-from tools.pythonTool import PythonREPLTool
+from tools.utils.pythonTool import PythonREPLTool
 
 from outputParser import GraphCreatorCreatePythonAgentResponse
 
@@ -24,23 +25,25 @@ class GraphCreatorInput(BaseModel):
 
 
 def create_graph_creator(client):
+    # UUIDを文字列を生成する
+    uuid_str = str(uuid.uuid4())
+
     @tool("graph_creator", args_schema=GraphCreatorInput)
     def graph_creator(detail: str, channel: str, ts: str) -> str:
         """Create a graph.."""
-
-        print(detail)
-
         parser = PydanticOutputParser(
             pydantic_object=GraphCreatorCreatePythonAgentResponse
         )
 
         prompt = PromptTemplate(
             template=GRAPH_CREATOR_CREATE_PYTHON_AGENT,
-            input_variables=["query"],
+            input_variables=["query", "filename"],
             # partial_variables={"format_instructions": parser.get_format_instructions()},
         )
 
-        _input = prompt.format_prompt(query="The following rules must be followed.")
+        _input = prompt.format_prompt(
+            query="The following rules must be followed.", filename=uuid_str
+        )
 
         print(_input.to_string())
 
@@ -59,15 +62,9 @@ def create_graph_creator(client):
             prefix=_input.to_string(),
         )
 
-        output = agent_executor.run(detail)
+        output = agent_executor.run("Create a graph." + detail)
 
-        print(output)
-
-        path = "/tmp/output.png"
-
-        # obj: GraphCreatorCreatePythonAgentResponse = parser.parse(output)
-
-        # print(obj)
+        path = f"/tmp/{uuid_str}.png"
 
         # pathにファイルが存在するか確認する
         if not os.path.exists(path):
@@ -77,8 +74,6 @@ def create_graph_creator(client):
             client.files_upload(
                 channels=channel, file=path, title="graph", thread_ts=ts
             )
-        # pathを削除する
-        # os.remove(path)
 
         return output
 

@@ -22,6 +22,7 @@ provider:
     SLACK_SIGNING_SECRET: ${env:SLACK_SIGNING_SECRET}
     SLACK_BOT_TOKEN: ${env:SLACK_BOT_TOKEN}
     OPENAI_API_KEY: ${env:OPENAI_API_KEY}
+    NEWS_API_KEY: ${env:NEWS_API_KEY}
 
 functions:
   func:

@@ -42,7 +42,7 @@ GRAPH_CREATOR_CREATE_PYTHON_AGENT = """
 {query}
 
 Rule: 
-The output destination for image files should always be /tmp/output.png
+The output destination for image files should always be /tmp/{filename}.png
 """
 
 GRAPH_CREATOR_CODE_GENERATE = """
@@ -50,5 +50,14 @@ Create Python code to graph the query and return the code and graph output desti
 
 {format_instructions}
 
+{query}
+"""
+
+GOOGLE_SEARCH = """
+You are a professional python programmer.
+Create Python code to Search for the query in google search and return the title, details and link in an array.
+Always use requests and BeautifulSoup.
+
+query:
 {query}
 """
