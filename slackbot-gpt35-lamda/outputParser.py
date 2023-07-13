@@ -1,6 +1,7 @@
 from typing import List
 from pydantic import BaseModel, Field, validator
 
+
 # Define your desired data structure.
 class GraphCreatorCreatePythonAgentResponse(BaseModel):
     filepath: str = Field(description="Set the file full path of the output image data")

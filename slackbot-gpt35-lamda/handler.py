@@ -1,5 +1,5 @@
 try:
-    import unzip_requirements # type: ignore
+    import unzip_requirements  # type: ignore
 except ImportError:
     pass
 
@@ -11,6 +11,7 @@ from index import app
 
 # ロギングを AWS Lambda 向けに初期化します
 SlackRequestHandler.clear_all_log_handlers()
+
 
 # AWS Lambda 環境で実行される関数
 def handler(event, context):

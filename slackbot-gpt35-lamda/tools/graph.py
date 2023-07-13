@@ -45,13 +45,11 @@ def create_graph_creator(client):
             query="The following rules must be followed.", filename=uuid_str
         )
 
-        print(_input.to_string())
-
         model_name = "gpt-4-0613"
         temperature = 0.1
         agent_executor = create_python_agent(
             llm=ChatOpenAI(
-                openai_api_key=os.environ["OPENAI_API_KEY"],
+                openai_api_key=os.environ["OPENAI_API_KEY"], # type: ignore
                 model_name=model_name,  # type: ignore
                 temperature=temperature,
             ),  # type: ignore

@@ -84,7 +84,6 @@ def mention_event_ack(body, say, ack, client):
     channel = mention["channel"]
     ts = mention["ts"]
     thread_ts = mention.get("thread_ts")
-    print(mention)
 
     client.reactions_add(name="eyes", channel=channel, timestamp=ts)
 
@@ -98,14 +97,14 @@ def mention_event_ack(body, say, ack, client):
     thread_history_str = ""
     # thread_historyが存在するなら
     if thread_history:
-      # thread_history でループする
-      for message in thread_history["messages"]:
-          # ユーザー名を取得
-          user_info = client.users_info(user=message['user'])
-          user_name = user_info['user']['name']
-          thread_history_str += user_name + ": " + message['text'] + "\n"
+        # thread_history でループする
+        for message in thread_history["messages"]:
+            # ユーザー名を取得
+            user_info = client.users_info(user=message["user"])
+            user_name = user_info["user"]["name"]
+            thread_history_str += user_name + ": " + message["text"] + "\n"
 
-    gptmessage = gpt35(text, channel, ts,client, thread_history_str )
+    gptmessage = gpt35(text, channel, ts, client, thread_history_str)
     say(text=gptmessage, channel=channel, thread_ts=ts)
 
 

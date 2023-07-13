@@ -19,7 +19,7 @@ import requests
 import json
 from newsapi import NewsApiClient
 
-NEWS_API_KEY = os.environ["NEWS_API_KEY"]
+NEWS_API_KEY = os.environ["NEWS_API_KEY"] # type: ignore
 
 
 def search_news(query):

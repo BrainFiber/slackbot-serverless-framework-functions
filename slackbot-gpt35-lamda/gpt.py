@@ -25,7 +25,7 @@ def gpt35(query, channel, ts,client, historyStr=""):
     model_name = "gpt-3.5-turbo-0613"
     temperature = 0.5
     llm = ChatOpenAI(
-        openai_api_key=os.environ["OPENAI_API_KEY"],
+        openai_api_key=os.environ["OPENAI_API_KEY"], # type: ignore
         model_name=model_name, # type: ignore
         temperature=temperature,
     )  # type: ignore
@@ -52,9 +52,5 @@ def gpt35(query, channel, ts,client, historyStr=""):
 
     agent = initialize_agent(tools, llm, agent=AgentType.OPENAI_FUNCTIONS, verbose=True)
     output = agent.run(_input.to_string())
-
-    # output = chain.run(query=query, historyStr=historyStr)
-
-    # print(output)
 
     return output

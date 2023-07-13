@@ -37,6 +37,7 @@ def sanitize_input(query: str) -> str:
     query = re.sub(r"(\s|`)*$", "", query)
     return query
 
+
 class PythonREPLTool(BaseTool):
     """A tool for running python code in a REPL."""
 
@@ -56,13 +57,16 @@ class PythonREPLTool(BaseTool):
         run_manager: Optional[CallbackManagerForToolRun] = None,
     ) -> Any:
         """Use the tool."""
-        query = """
+        query = (
+            """
 import matplotlib
 matplotlib.use('agg')
-""" + query
+"""
+            + query
+        )
         if self.sanitize_input:
             query = sanitize_input(query)
-        
+
         return self.python_repl.run(query)
 
     async def _arun(
