@@ -1,21 +1,21 @@
 from langchain.tools import tool
 from pydantic import BaseModel, Field
-from langchain.chat_models import ChatOpenAI
 from langchain.agents.agent_toolkits import create_python_agent
-from langchain.agents import initialize_agent, Tool, AgentType
+from langchain.agents import AgentType
 from langchain.output_parsers import PydanticOutputParser
 from langchain import PromptTemplate
 import uuid
 
-
 import os
 
 # PROPMPTをインポートする
-from prompt import GRAPH_CREATOR_CREATE_PYTHON_AGENT
+from prompt.prompt import GRAPH_CREATOR_CREATE_PYTHON_AGENT
 
 from tools.utils.pythonTool import PythonREPLTool
 
-from outputParser import GraphCreatorCreatePythonAgentResponse
+from parsers.outputParser import GraphCreatorCreatePythonAgentResponse
+
+from utils.llm import get_gpt4
 
 
 class GraphCreatorInput(BaseModel):
@@ -24,6 +24,7 @@ class GraphCreatorInput(BaseModel):
     ts: str = Field(description="ts Information")
 
 
+# use gpt4
 def create_graph_creator(client):
     # UUIDを文字列を生成する
     uuid_str = str(uuid.uuid4())
@@ -45,14 +46,8 @@ def create_graph_creator(client):
             query="The following rules must be followed.", filename=uuid_str
         )
 
-        model_name = "gpt-4-0613"
-        temperature = 0.1
         agent_executor = create_python_agent(
-            llm=ChatOpenAI(
-                openai_api_key=os.environ["OPENAI_API_KEY"], # type: ignore
-                model_name=model_name,  # type: ignore
-                temperature=temperature,
-            ),  # type: ignore
+            llm=get_gpt4(),
             tool=PythonREPLTool(),  # type: ignore
             verbose=True,
             agent_type=AgentType.OPENAI_FUNCTIONS,

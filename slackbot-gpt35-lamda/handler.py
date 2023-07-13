@@ -7,7 +7,7 @@ except ImportError:
 # これより以降は AWS Lambda 環境で実行したときのみ実行されます
 
 from slack_bolt.adapter.aws_lambda import SlackRequestHandler
-from index import app
+from service.slack import app
 
 # ロギングを AWS Lambda 向けに初期化します
 SlackRequestHandler.clear_all_log_handlers()
