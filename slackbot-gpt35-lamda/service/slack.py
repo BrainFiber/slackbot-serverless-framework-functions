@@ -101,7 +101,15 @@ def mention_event_ack(body, say, ack, client):
             user_name = user_info["user"]["name"]
             thread_history_str += user_name + ": " + message["text"] + "\n"
 
-    gptmessage = gpt35(text, channel, ts, client, thread_history_str)
+    try:
+        gptmessage = gpt35(text, channel, ts, client, thread_history_str)
+    except:
+        # エラー詳細をprint出力
+        import traceback
+
+        traceback.print_exc()
+        gptmessage = "エラーが発生しました。"
+
     say(text=gptmessage, channel=channel, thread_ts=ts)
 
 

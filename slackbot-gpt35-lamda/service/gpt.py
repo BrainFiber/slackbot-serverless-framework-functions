@@ -1,4 +1,4 @@
-from langchain import PromptTemplate
+from langchain import LLMChain, PromptTemplate
 from langchain.agents import initialize_agent, Tool, AgentType
 
 # PROPMPTをインポートする
@@ -8,6 +8,10 @@ from tools.graph import create_graph_creator
 from tools.newApi import create_news_search_creator
 
 from utils.llm import get_gpt35
+
+import os
+
+USE_OPENAI_FUNCTIONS = os.environ.get("USE_OPENAI_FUNCTIONS")
 
 
 def return_answer(text):
@@ -31,18 +35,25 @@ def gpt35(query, channel, ts, client, historyStr=""):
     # output = llm(_input.to_string())
     # chain = LLMChain(llm=llm, prompt=prompt, verbose=True)
 
-    tools = [
-        Tool.from_function(
-            func=return_answer,
-            name="return_answer",
-            description="Returning answers to questions"
-            # coroutine= ... <- you can specify an async method if desired as well
-        ),
-        create_graph_creator(client),
-        create_news_search_creator(client),
-    ]
+    output = ""
 
-    agent = initialize_agent(tools, llm, agent=AgentType.OPENAI_FUNCTIONS, verbose=True)
-    output = agent.run(_input.to_string())
+    if USE_OPENAI_FUNCTIONS == "True":
+        tools = [
+            Tool.from_function(
+                func=return_answer,
+                name="return_answer",
+                description="Returning answers to questions"
+                # coroutine= ... <- you can specify an async method if desired as well
+            ),
+            create_graph_creator(client),
+            create_news_search_creator(client),
+        ]
+
+        agent = initialize_agent(
+            tools, llm, agent=AgentType.OPENAI_FUNCTIONS, verbose=True
+        )
+        output = agent.run(_input.to_string())
+    else:
+        output = llm.predict(_input.to_string())
 
     return output

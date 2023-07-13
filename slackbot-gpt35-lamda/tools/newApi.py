@@ -6,8 +6,9 @@ import os
 
 import json
 from newsapi import NewsApiClient
+from tools.dummy import create_dummy
 
-NEWS_API_KEY = os.environ["NEWS_API_KEY"]  # type: ignore
+NEWS_API_KEY = os.environ.get("NEWS_API_KEY")  # type: ignore
 
 
 def search_news(query):
@@ -57,15 +58,20 @@ class GoogleSearchInput(BaseModel):
 
 
 def create_news_search_creator(client):
-    @tool("news_search", args_schema=GoogleSearchInput)
-    def news_search(query: str) -> str:
-        """Find the latest news. Search by the last week's data."""
+    if NEWS_API_KEY:
 
-        output = search_news(query)
+        @tool("news_search", args_schema=GoogleSearchInput)
+        def news_search(query: str) -> str:
+            """Find the latest news. Search by the last week's data."""
 
-        return (
-            "Here are the results of our search for the latest news from the past week."
-            + output
-        )
+            output = search_news(query)
 
-    return news_search
+            return (
+                "Here are the results of our search for the latest news from the past week."
+                + output
+            )
+
+        return news_search
+    else:
+        # Noneを返す
+        return create_dummy(client)
