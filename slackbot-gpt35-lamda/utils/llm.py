@@ -23,6 +23,7 @@ def get_llm(model_name, temperature):
     # USE_AZURE_OPENAI_SERVICE = True の場合は
     # Azure OpenAI Serviceを使用する
     if USE_AZURE_OPENAI_SERVICE == "True":
+        print("Using Azure OpenAI Service")
         llm = AzureChatOpenAI(
             deployment_name=model_name,
             openai_api_base=OPENAI_API_BASE,
@@ -30,6 +31,7 @@ def get_llm(model_name, temperature):
             openai_api_version=OPENAI_API_VERSION,
         ) # type: ignore
     else:
+        print("Using OpenAI API")
         llm = ChatOpenAI(
             openai_api_key=OPENAI_API_KEY,
             model_name=model_name, # type: ignore

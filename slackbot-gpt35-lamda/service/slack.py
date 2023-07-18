@@ -82,6 +82,8 @@ def mention_event_ack(body, say, ack, client):
     ts = mention["ts"]
     thread_ts = mention.get("thread_ts")
 
+    parent_ts = thread_ts if thread_ts else ts
+
     client.reactions_add(name="eyes", channel=channel, timestamp=ts)
 
     # スレッドのチャット履歴を保存する変数を定義
@@ -102,7 +104,7 @@ def mention_event_ack(body, say, ack, client):
             thread_history_str += user_name + ": " + message["text"] + "\n"
 
     try:
-        gptmessage = gpt35(text, channel, ts, client, thread_history_str)
+        gptmessage = gpt35(text, channel, parent_ts, client, thread_history_str)
     except:
         # エラー詳細をprint出力
         import traceback
@@ -110,7 +112,7 @@ def mention_event_ack(body, say, ack, client):
         traceback.print_exc()
         gptmessage = "エラーが発生しました。"
 
-    say(text=gptmessage, channel=channel, thread_ts=ts)
+    say(text=gptmessage, channel=channel, thread_ts=parent_ts)
 
 
 app.event("app_mention")(

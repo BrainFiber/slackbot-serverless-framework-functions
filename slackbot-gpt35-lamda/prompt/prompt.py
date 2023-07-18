@@ -38,11 +38,19 @@ query:
 {query}
  """
 
-GRAPH_CREATOR_CREATE_PYTHON_AGENT = """
+GRAPH_CREATOR_CREATE_PYTHON_AGENT_SYSTEM = """
 {query}
 
 Rule: 
 The output destination for image files should always be /tmp/{filename}.png
+"""
+
+GRAPH_CREATOR_CREATE_PYTHON_AGENT_QUERY = """
+Create a graph. {query}
+
+Conversation History:
+{history}
+
 """
 
 GRAPH_CREATOR_CODE_GENERATE = """
